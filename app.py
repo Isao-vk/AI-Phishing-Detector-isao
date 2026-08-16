@@ -1,18 +1,29 @@
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 import os
 import re
 from urllib.parse import urlparse
 
 app = Flask(__name__)
 
+# Allow Vercel frontend to connect to this Flask backend
+CORS(app)
+
 
 # =========================================================
 # HOME PAGE
 # =========================================================
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-    return send_from_directory(".", "index.html")
+    return jsonify({
+        "status": "online",
+        "message": "AI Phishing Detection Backend is running",
+        "endpoints": {
+            "health": "/health",
+            "scan": "/scan"
+        }
+    })
 
 
 # =========================================================
@@ -24,7 +35,7 @@ def health():
     return jsonify({
         "status": "online",
         "message": "AI Phishing Detection Server is running"
-    })
+    }), 200
 
 
 # =========================================================
@@ -55,6 +66,10 @@ def analyze_url(url):
     if not re.match(r"^https?://", test_url, re.IGNORECASE):
         test_url = "http://" + test_url
 
+    # -----------------------------------------------------
+    # Parse URL
+    # -----------------------------------------------------
+
     try:
         parsed = urlparse(test_url)
         hostname = parsed.hostname or ""
@@ -62,6 +77,17 @@ def analyze_url(url):
         hostname = ""
 
     hostname = hostname.lower()
+
+    # Invalid hostname
+    if not hostname:
+        return {
+            "status": "ERROR",
+            "score": 0,
+            "url": url,
+            "hostname": "",
+            "reasons": ["Invalid URL"],
+            "signals": []
+        }
 
     # -----------------------------------------------------
     # HTTPS CHECK
@@ -78,7 +104,9 @@ def analyze_url(url):
 
         score += 20
 
-        reasons.append("Website does not use HTTPS")
+        reasons.append(
+            "Website does not use HTTPS"
+        )
 
         signals.append({
             "name": "HTTPS Encryption",
@@ -96,7 +124,9 @@ def analyze_url(url):
 
         score += 25
 
-        reasons.append("URL uses a raw IP address instead of a domain")
+        reasons.append(
+            "URL uses a raw IP address instead of a domain"
+        )
 
         signals.append({
             "name": "IP Address Check",
@@ -190,13 +220,19 @@ def analyze_url(url):
             "status": "WARNING"
         })
 
+    else:
+
+        signals.append({
+            "name": "URL Redirect Trick",
+            "status": "PASS"
+        })
+
 
     # -----------------------------------------------------
     # DOMAIN STRUCTURE
     # -----------------------------------------------------
 
     dot_count = hostname.count(".")
-
     hyphen_count = hostname.count("-")
 
     if dot_count >= 4:
@@ -259,7 +295,7 @@ def analyze_url(url):
 
 
     # -----------------------------------------------------
-    # SHORTENER DETECTION
+    # URL SHORTENER DETECTION
     # -----------------------------------------------------
 
     shorteners = [
@@ -287,6 +323,20 @@ def analyze_url(url):
             "status": "WARNING"
         })
 
+    else:
+
+        signals.append({
+            "name": "URL Shortener",
+            "status": "PASS"
+        })
+
+
+    # -----------------------------------------------------
+    # LIMIT SCORE
+    # -----------------------------------------------------
+
+    score = min(score, 100)
+
 
     # -----------------------------------------------------
     # FINAL RISK LEVEL
@@ -303,13 +353,6 @@ def analyze_url(url):
     else:
 
         status = "SAFE"
-
-
-    # -----------------------------------------------------
-    # LIMIT SCORE
-    # -----------------------------------------------------
-
-    score = min(score, 100)
 
 
     # -----------------------------------------------------
@@ -391,6 +434,30 @@ def scan():
 
 
 # =========================================================
+# 404 HANDLER
+# =========================================================
+
+@app.errorhandler(404)
+def not_found(error):
+
+    return jsonify({
+        "error": "Endpoint not found"
+    }), 404
+
+
+# =========================================================
+# 500 HANDLER
+# =========================================================
+
+@app.errorhandler(500)
+def internal_error(error):
+
+    return jsonify({
+        "error": "Internal server error"
+    }), 500
+
+
+# =========================================================
 # RUN SERVER
 # =========================================================
 
@@ -398,16 +465,20 @@ if __name__ == "__main__":
 
     print("")
     print("==========================================")
-    print("      AI PHISHING DETECTOR")
+    print("       AI PHISHING DETECTOR")
     print("==========================================")
     print("")
     print("Server starting...")
-    print("Open: http://127.0.0.1:5000")
-    print("API:  http://127.0.0.1:5000/scan")
+
+    # Render provides PORT automatically.
+    # Local development uses port 5000.
+    port = int(os.environ.get("PORT", 5000))
+
+    print(f"Running on port: {port}")
     print("")
 
     app.run(
-        host="127.0.0.1",
-        port=5000,
-        debug=True
+        host="0.0.0.0",
+        port=port,
+        debug=False
     )
