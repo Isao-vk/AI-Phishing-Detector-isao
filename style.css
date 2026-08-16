@@ -1,0 +1,545 @@
+/* =========================================
+   PHISHGUARD AI
+   NEON PURPLE + RED CYBERPUNK THEME
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    --bg: #05030a;
+    --panel: #0b0712;
+    --panel2: #100a18;
+
+    --purple: #a855f7;
+    --purple-bright: #c084fc;
+    --purple-dark: #6d28d9;
+
+    --red: #ff1744;
+    --red-bright: #ff4d6d;
+
+    --text: #f5f3ff;
+    --muted: #9389a8;
+
+    --border: rgba(168, 85, 247, 0.25);
+    --border-red: rgba(255, 23, 68, 0.35);
+
+    --shadow-purple:
+        0 0 15px rgba(168, 85, 247, .25),
+        0 0 40px rgba(168, 85, 247, .08);
+
+    --shadow-red:
+        0 0 15px rgba(255, 23, 68, .30),
+        0 0 40px rgba(255, 23, 68, .08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family: "Inter", sans-serif;
+    color: var(--text);
+
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(168, 85, 247, .12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 75%,
+            rgba(255, 23, 68, .10),
+            transparent 30%
+        ),
+        #05030a;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   CYBER GRID
+   ========================================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(
+            rgba(168, 85, 247, .055) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(168, 85, 247, .055) 1px,
+            transparent 1px
+        );
+
+    background-size: 45px 45px;
+
+    mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 90%
+    );
+
+    z-index: -1;
+}
+
+
+/* =========================================
+   SCROLLBAR
+   ========================================= */
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #05030a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        #8b5cf6,
+        #ff1744
+    );
+
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c084fc;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+   ========================================= */
+
+.container {
+    width: min(1200px, 92%);
+    margin: auto;
+    padding: 55px 0 100px;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.container h1 {
+    position: relative;
+
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -2px;
+
+    margin-bottom: 15px;
+
+    background: linear-gradient(
+        90deg,
+        #ffffff,
+        #c084fc,
+        #ff1744
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    text-shadow:
+        0 0 25px rgba(168, 85, 247, .35);
+}
+
+.container h1::after {
+    content: "AI THREAT INTELLIGENCE";
+
+    display: block;
+
+    margin-top: 12px;
+
+    font-family: "JetBrains Mono", monospace;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    letter-spacing: 4px;
+
+    color: #a855f7;
+}
+
+
+/* =========================================
+   DESCRIPTION
+   ========================================= */
+
+.container > p {
+    color: var(--muted);
+
+    font-family: "JetBrains Mono", monospace;
+
+    font-size: 14px;
+
+    margin-bottom: 30px;
+
+    letter-spacing: .5px;
+}
+
+
+/* =========================================
+   SCAN AREA
+   ========================================= */
+
+.container > input {
+    width: calc(100% - 150px);
+
+    height: 58px;
+
+    padding: 0 20px;
+
+    border-radius: 12px;
+
+    border: 1px solid var(--border);
+
+    outline: none;
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(168, 85, 247, .05),
+            rgba(255, 23, 68, .035)
+        ),
+        #08050d;
+
+    color: white;
+
+    font-family: "JetBrains Mono", monospace;
+
+    font-size: 14px;
+
+    box-shadow:
+        inset 0 0 20px rgba(168, 85, 247, .04),
+        var(--shadow-purple);
+
+    transition: .25s;
+}
+
+.container > input::placeholder {
+    color: #655b73;
+}
+
+.container > input:focus {
+    border-color: var(--purple);
+
+    box-shadow:
+        0 0 0 2px rgba(168, 85, 247, .10),
+        0 0 25px rgba(168, 85, 247, .25);
+}
+
+
+/* =========================================
+   SCAN BUTTON
+   ========================================= */
+
+button {
+    height: 58px;
+
+    min-width: 130px;
+
+    margin-left: 10px;
+
+    padding: 0 25px;
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-family: "JetBrains Mono", monospace;
+
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7 50%,
+            #ff1744
+        );
+
+    box-shadow:
+        0 0 20px rgba(168, 85, 247, .30),
+        0 0 30px rgba(255, 23, 68, .15);
+
+    transition:
+        transform .2s,
+        box-shadow .2s;
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.02);
+
+    box-shadow:
+        0 0 25px rgba(168, 85, 247, .55),
+        0 0 45px rgba(255, 23, 68, .30);
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+
+/* =========================================
+   RESULT CARD
+   ========================================= */
+
+#result {
+    margin-top: 35px;
+
+    min-height: 80px;
+
+    padding: 25px;
+
+    border-radius: 16px;
+
+    border: 1px solid var(--border);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(168, 85, 247, .07),
+            rgba(255, 23, 68, .04)
+        ),
+        rgba(8, 5, 13, .85);
+
+    box-shadow: var(--shadow-purple);
+
+    font-family: "JetBrains Mono", monospace;
+}
+
+
+/* =========================================
+   RESULT STATUS
+   ========================================= */
+
+.safe {
+    border-color: rgba(34, 197, 94, .45) !important;
+
+    box-shadow:
+        0 0 20px rgba(34,197,94,.15) !important;
+}
+
+.suspicious {
+    border-color: rgba(255, 180, 0, .5) !important;
+
+    box-shadow:
+        0 0 20px rgba(255,180,0,.15) !important;
+}
+
+.phishing,
+.risky,
+.danger {
+    border-color: var(--red) !important;
+
+    box-shadow:
+        0 0 20px rgba(255,23,68,.25),
+        0 0 50px rgba(255,23,68,.10) !important;
+
+    animation: dangerPulse 1.8s infinite;
+}
+
+@keyframes dangerPulse {
+
+    0%,100% {
+        box-shadow:
+            0 0 15px rgba(255,23,68,.20);
+    }
+
+    50% {
+        box-shadow:
+            0 0 30px rgba(255,23,68,.45);
+    }
+}
+
+
+/* =========================================
+   HISTORY
+   ========================================= */
+
+.container hr {
+    margin: 55px 0 35px;
+
+    border: 0;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #a855f7,
+            #ff1744,
+            transparent
+        );
+
+    box-shadow:
+        0 0 15px rgba(168,85,247,.3);
+}
+
+.container h2 {
+    margin-bottom: 20px;
+
+    font-size: 20px;
+
+    font-family: "JetBrains Mono", monospace;
+
+    color: #c084fc;
+
+    letter-spacing: 1px;
+}
+
+#history {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+/* =========================================
+   HISTORY ITEMS
+   ========================================= */
+
+.history-item {
+    padding: 18px 20px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(168,85,247,.18);
+
+    background: rgba(12,8,20,.8);
+
+    font-family: "JetBrains Mono", monospace;
+
+    transition: .2s;
+}
+
+.history-item:hover {
+    border-color: rgba(168,85,247,.5);
+
+    transform: translateX(5px);
+
+    box-shadow:
+        -4px 0 0 #a855f7,
+        0 0 20px rgba(168,85,247,.12);
+}
+
+
+/* =========================================
+   NEON TEXT
+   ========================================= */
+
+.neon-purple {
+    color: #c084fc;
+
+    text-shadow:
+        0 0 8px #a855f7,
+        0 0 20px rgba(168,85,247,.5);
+}
+
+.neon-red {
+    color: #ff4d6d;
+
+    text-shadow:
+        0 0 8px #ff1744,
+        0 0 20px rgba(255,23,68,.5);
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: 90%;
+        padding-top: 35px;
+    }
+
+    .container h1 {
+        font-size: 38px;
+    }
+
+    .container > input {
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    button {
+        width: 100%;
+        margin-left: 0;
+    }
+
+}
+
+
+/* =========================================
+   CYBER SCAN LINE
+   ========================================= */
+
+body::after {
+    content: "";
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #a855f7,
+            #ff1744,
+            transparent
+        );
+
+    opacity: .18;
+
+    pointer-events: none;
+
+    animation: scanLine 6s linear infinite;
+
+    z-index: 999;
+}
+
+@keyframes scanLine {
+
+    0% {
+        top: -5px;
+    }
+
+    100% {
+        top: 105%;
+    }
+
+}
