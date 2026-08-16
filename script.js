@@ -1,6 +1,5 @@
 const BACKEND_URL = "https://ai-phishing-detector-isao.onrender.com";
 
-
 async function scanURL() {
 
     const url = document.getElementById("url").value.trim();
@@ -12,12 +11,12 @@ async function scanURL() {
 
     const result = document.getElementById("result");
 
-    result.innerHTML = "🔄 Scanning...";
-    result.style.color = "#ffffff";
+    result.innerHTML = "🔄 SCANNING...";
+    result.style.color = "white";
 
     try {
 
-        const response = await fetch(`${BACKEND_URL}/scan`, {
+        const response = await fetch(BACKEND_URL + "/scan", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -28,7 +27,7 @@ async function scanURL() {
         });
 
         if (!response.ok) {
-            throw new Error("Backend request failed");
+            throw new Error("Server Error: " + response.status);
         }
 
         const data = await response.json();
@@ -62,7 +61,7 @@ async function scanURL() {
 
         result.innerHTML =
             "❌ BACKEND ERROR<br><br>" +
-            "Unable to connect to phishing detection server.";
+            "Failed to connect to Render backend.";
 
         result.style.color = "red";
     }
@@ -71,14 +70,12 @@ async function scanURL() {
 
 async function loadHistory() {
 
-    const historyBox = document.getElementById("history");
-
     try {
 
-        const response = await fetch(`${BACKEND_URL}/history`);
+        const response = await fetch(BACKEND_URL + "/history");
 
         if (!response.ok) {
-            throw new Error("History request failed");
+            throw new Error("History Error");
         }
 
         const history = await response.json();
@@ -109,16 +106,15 @@ async function loadHistory() {
 
         });
 
-        historyBox.innerHTML =
+        document.getElementById("history").innerHTML =
             html || "No History";
 
     } catch (error) {
 
         console.error(error);
 
-        historyBox.innerHTML =
+        document.getElementById("history").innerHTML =
             "Unable to load history.";
-
     }
 }
 
