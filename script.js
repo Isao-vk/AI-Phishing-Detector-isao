@@ -1,8 +1,11 @@
+const BACKEND_URL = "https://ai-phishing-detector-isao.onrender.com";
+
+
 async function scanURL() {
 
     const url = document.getElementById("url").value.trim();
 
-    if (url === "") {
+    if (!url) {
         alert("Enter URL");
         return;
     }
@@ -14,7 +17,7 @@ async function scanURL() {
 
     try {
 
-        const response = await fetch("/scan", {
+        const response = await fetch(`${BACKEND_URL}/scan`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -25,7 +28,7 @@ async function scanURL() {
         });
 
         if (!response.ok) {
-            throw new Error("Server error: " + response.status);
+            throw new Error("Backend request failed");
         }
 
         const data = await response.json();
@@ -38,7 +41,7 @@ async function scanURL() {
                 data.confidence +
                 "%";
 
-            result.style.color = "limegreen";
+            result.style.color = "green";
 
         } else {
 
@@ -59,7 +62,7 @@ async function scanURL() {
 
         result.innerHTML =
             "❌ BACKEND ERROR<br><br>" +
-            "Unable to connect to server.";
+            "Unable to connect to phishing detection server.";
 
         result.style.color = "red";
     }
@@ -68,16 +71,14 @@ async function scanURL() {
 
 async function loadHistory() {
 
+    const historyBox = document.getElementById("history");
+
     try {
 
-        // IMPORTANT:
-        // Do NOT use 127.0.0.1:5000 on Render.
-        // Use the same deployed backend.
-
-        const response = await fetch("/history");
+        const response = await fetch(`${BACKEND_URL}/history`);
 
         if (!response.ok) {
-            throw new Error("History server error");
+            throw new Error("History request failed");
         }
 
         const history = await response.json();
@@ -96,8 +97,11 @@ async function loadHistory() {
                 ">
 
                     <b>URL :</b> ${item.url}<br>
+
                     <b>Status :</b> ${item.status}<br>
+
                     <b>Confidence :</b> ${item.confidence}%<br>
+
                     <b>Time :</b> ${item.time}
 
                 </div>
@@ -105,22 +109,18 @@ async function loadHistory() {
 
         });
 
-        if (html === "") {
-            html = "No History";
-        }
-
-        document.getElementById("history").innerHTML = html;
+        historyBox.innerHTML =
+            html || "No History";
 
     } catch (error) {
 
-        console.error("History Error:", error);
+        console.error(error);
 
-        document.getElementById("history").innerHTML =
+        historyBox.innerHTML =
             "Unable to load history.";
 
     }
 }
 
 
-// Load history when page opens
 loadHistory();
