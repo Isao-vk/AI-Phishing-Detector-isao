@@ -2,2118 +2,577 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PhishGuard AI</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-body{
-    min-height:100vh;
+body {
+    min-height: 100vh;
+    color: white;
     background:
-    radial-gradient(circle at 15% 20%,rgba(168,85,247,.15),transparent 30%),
-    radial-gradient(circle at 85% 80%,rgba(255,23,68,.12),transparent 30%),
-    #050208;
-    color:#fff;
-    font-family:Arial,sans-serif;
+        linear-gradient(rgba(20,0,35,.75), rgba(5,0,15,.95)),
+        radial-gradient(circle at top right, #8b00ff55, transparent 35%),
+        #050008;
 }
 
-body:before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .25;
     background-image:
-    linear-gradient(rgba(168,85,247,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(168,85,247,.035) 1px,transparent 1px);
-    background-size:35px 35px;
-}
-
-/* LOGIN */
-
-#authScreen{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
-
-.auth-box{
-    width:390px;
-    padding:35px;
-    border:1px solid rgba(168,85,247,.3);
-    border-radius:20px;
-    background:rgba(10,5,15,.94);
-    box-shadow:0 0 50px rgba(168,85,247,.12);
-    position:relative;
-}
-
-.auth-logo{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.shield{
-    width:55px;
-    height:55px;
-    margin:auto;
-    display:grid;
-    place-items:center;
-    border-radius:16px;
-    background:linear-gradient(135deg,#7c3aed,#ff1744);
-    box-shadow:0 0 30px rgba(168,85,247,.4);
-    font-size:27px;
-}
-
-.auth-logo h1{
-    margin-top:15px;
-    font-size:22px;
-    letter-spacing:2px;
-}
-
-.auth-logo p{
-    color:#81768d;
-    font-size:9px;
-    letter-spacing:2px;
-    margin-top:6px;
-}
-
-.tabs{
-    display:flex;
-    gap:5px;
-    margin-bottom:20px;
-}
-
-.tab{
-    flex:1;
-    padding:11px;
-    border:1px solid #251531;
-    background:#09050d;
-    color:#81768d;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:10px;
-}
-
-.tab.active{
-    color:#fff;
-    background:linear-gradient(135deg,#7c3aed,#8b2be2);
-    border-color:#a855f7;
-}
-
-.auth-form{
-    display:none;
-}
-
-.auth-form.active{
-    display:block;
-}
-
-.input-group{
-    margin-bottom:14px;
-}
-
-.input-group label{
-    display:block;
-    color:#91859c;
-    font-family:monospace;
-    font-size:9px;
-    margin-bottom:7px;
-}
-
-.input-group input{
-    width:100%;
-    height:45px;
-    padding:0 13px;
-    border-radius:8px;
-    outline:none;
-    border:1px solid #281632;
-    background:#08040c;
-    color:white;
-    font-family:monospace;
-    font-size:11px;
-}
-
-.input-group input:focus{
-    border-color:#a855f7;
-    box-shadow:0 0 15px rgba(168,85,247,.12);
-}
-
-.auth-btn{
-    width:100%;
-    height:45px;
-    margin-top:5px;
-    border:0;
-    border-radius:8px;
-    color:#fff;
-    background:linear-gradient(135deg,#7c3aed,#ff1744);
-    font-weight:bold;
-    font-size:10px;
-    letter-spacing:1px;
-    cursor:pointer;
-}
-
-.auth-btn:hover{
-    box-shadow:0 0 25px rgba(168,85,247,.35);
-    transform:translateY(-1px);
-}
-
-.auth-message{
-    min-height:18px;
-    margin-top:12px;
-    text-align:center;
-    font-family:monospace;
-    font-size:9px;
-}
-
-.security-note{
-    margin-top:20px;
-    padding:10px;
-    border:1px solid #1d1225;
-    border-radius:7px;
-    color:#62586c;
-    text-align:center;
-    font-size:8px;
-}
-
-/* APP */
-
-#app{
-    display:none;
-}
-
-.container{
-    width:min(1100px,100%);
-    margin:auto;
-    padding:25px;
-}
-
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:45px;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.logo-icon{
-    width:42px;
-    height:42px;
-    display:grid;
-    place-items:center;
-    border-radius:12px;
-    background:linear-gradient(135deg,#7c3aed,#ff1744);
-    box-shadow:0 0 25px rgba(168,85,247,.35);
-}
-
-.logo h2{
-    font-size:17px;
-    letter-spacing:2px;
-}
-
-.logo span{
-    display:block;
-    color:#9b8fa7;
-    font-size:8px;
-    letter-spacing:3px;
-    margin-top:3px;
-}
-
-.user-area{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.user-name{
-    color:#c084fc;
-    font-family:monospace;
-    font-size:9px;
-}
-
-.logout{
-    padding:8px 11px;
-    border-radius:7px;
-    border:1px solid #3a1c48;
-    background:#0c0610;
-    color:#ff6680;
-    cursor:pointer;
-    font-size:8px;
-}
-
-.live{
-    display:flex;
-    align-items:center;
-    gap:7px;
-    color:#00ff88;
-    font-size:8px;
-    letter-spacing:2px;
-}
-
-.live-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:#00ff88;
-    box-shadow:0 0 12px #00ff88;
-}
-
-.hero{
-    text-align:center;
-    margin-bottom:35px;
-}
-
-.tag{
-    color:#a855f7;
-    font-size:9px;
-    letter-spacing:4px;
-}
-
-.hero h1{
-    margin-top:14px;
-    font-size:clamp(35px,6vw,65px);
-    line-height:1;
-    letter-spacing:-3px;
-    background:linear-gradient(90deg,#fff,#c084fc,#ff4d6d);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.hero p{
-    margin-top:15px;
-    color:#81768d;
-    font-size:11px;
-}
-
-.scan-card,
-.advanced-panel,
-.history{
-    padding:25px;
-    border-radius:18px;
-    border:1px solid rgba(168,85,247,.2);
-    background:rgba(10,5,15,.9);
-    box-shadow:0 0 35px rgba(168,85,247,.05);
-}
-
-.scan-header,
-.advanced-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:17px;
-}
-
-.scan-header h3{
-    font-size:12px;
-}
-
-.engine{
-    color:#756a80;
-    font-family:monospace;
-    font-size:8px;
-}
-
-.input-row{
-    display:flex;
-    gap:10px;
-}
-
-#url{
-    flex:1;
-    height:52px;
-    padding:0 17px;
-    border-radius:10px;
-    outline:none;
-    border:1px solid #251531;
-    background:#09050d;
-    color:#fff;
-    font-family:monospace;
-    font-size:12px;
-}
-
-#url:focus{
-    border-color:#a855f7;
-}
-
-#scanBtn{
-    width:130px;
-    border:0;
-    border-radius:10px;
-    color:#fff;
-    background:linear-gradient(135deg,#7c3aed,#ff1744);
-    cursor:pointer;
-    font-size:10px;
-    font-weight:bold;
-}
-
-#scanBtn:hover{
-    box-shadow:0 0 25px rgba(168,85,247,.35);
-}
-
-#scanning{
-    display:none;
-    margin-top:15px;
-    padding:13px;
-    border-radius:8px;
-    background:rgba(168,85,247,.05);
-    color:#a855f7;
-    font-family:monospace;
-    text-align:center;
-    font-size:9px;
-}
+        linear-gradient(#9b4dff22 1px, transparent 1px),
+        linear-gradient(90deg, #9b4dff22 1px, transparent 1px);
+    background-size: 45px 45px;
+}
+
+.navbar {
+    width: 90%;
+    max-width: 1250px;
+    margin: auto;
+    padding: 25px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    background: linear-gradient(135deg,#9b35ff,#ff126b);
+    box-shadow: 0 0 25px #a400ff66;
+}
 
-#scanning.active{
-    display:block;
+.logo h2 {
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    display: block;
+    color: #a879d9;
+    font-size: 9px;
+    letter-spacing: 4px;
+    margin-top: 3px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #00ff9d;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    background: #00ff9d;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #00ff9d;
+}
+
+.hero {
+    width: 90%;
+    max-width: 1100px;
+    margin: 70px auto 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.badge {
+    color: #bd5cff;
+    font-size: 12px;
+    letter-spacing: 6px;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: clamp(45px, 7vw, 82px);
+    line-height: .98;
+    font-weight: 800;
+    background: linear-gradient(90deg,#b878ff,#ff5ab3);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
-.scan-line{
-    height:2px;
-    margin-top:10px;
-    background:#211329;
-    overflow:hidden;
+.hero p {
+    margin-top: 25px;
+    color: #9c91aa;
+    font-size: 16px;
 }
 
-.scan-line:after{
-    content:"";
-    display:block;
-    width:30%;
-    height:100%;
-    background:linear-gradient(90deg,transparent,#a855f7,#ff1744);
-    animation:scan 1s infinite;
+.scanner {
+    width: 90%;
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 35px;
+    border: 1px solid #7d35a866;
+    border-radius: 25px;
+    background: rgba(10,2,18,.78);
+    box-shadow:
+        0 0 50px #8d00ff14,
+        inset 0 0 50px #8d00ff08;
+    position: relative;
+    z-index: 1;
 }
 
-@keyframes scan{
-    from{transform:translateX(-120%)}
-    to{transform:translateX(400%)}
+.scanner-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
-#result{
-    margin-top:20px;
+.scanner-title h3 {
+    font-size: 15px;
+    letter-spacing: 1px;
 }
 
-.result-card{
-    padding:20px;
-    border-radius:12px;
-    background:#09050d;
-    border:1px solid #281632;
+.engine {
+    font-size: 10px;
+    color: #756b81;
+    letter-spacing: 2px;
 }
 
-.result-status{
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:8px;
+.input-area {
+    display: flex;
+    gap: 12px;
 }
 
-.safe{color:#00ff88}
-.suspicious{color:#ffc400}
-.risky{color:#ff1744}
-
-.result-url{
-    color:#8d8298;
-    font-family:monospace;
-    font-size:10px;
-    word-break:break-all;
-}
-
-.advanced-panel{
-    margin-top:25px;
+input {
+    flex: 1;
+    height: 65px;
+    padding: 0 20px;
+    border: 1px solid #52246e;
+    border-radius: 15px;
+    outline: none;
+    background: #08030e;
+    color: white;
+    font-size: 16px;
 }
 
-.advanced-tag{
-    color:#a855f7;
-    font-size:8px;
-    letter-spacing:3px;
+input:focus {
+    border-color: #b33cff;
+    box-shadow: 0 0 20px #9c00ff22;
 }
 
-.advanced-header h2{
-    margin-top:6px;
-    font-size:14px;
+button {
+    width: 180px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg,#9e3dff,#ff126b);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 25px #ff168044;
+    transition: .25s;
 }
 
-.meter-header{
-    display:flex;
-    justify-content:space-between;
-    color:#80758c;
-    font-family:monospace;
-    font-size:9px;
-    margin-bottom:9px;
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px #ff168077;
 }
 
-#threatPercent{
-    color:#c084fc;
-    font-size:14px;
+button:disabled {
+    opacity: .6;
+    cursor: wait;
+    transform: none;
 }
 
-.meter-track{
-    height:10px;
-    overflow:hidden;
-    border-radius:20px;
-    background:#120b18;
+.result {
+    display: none;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 18px;
+    border: 1px solid #542567;
+    background: #08030d;
 }
 
-#meterBar{
-    width:0;
-    height:100%;
-    border-radius:20px;
-    background:linear-gradient(90deg,#00ff88,#ffc400,#ff1744);
-    transition:width 1s;
+.result.show {
+    display: block;
 }
 
-.meter-labels{
-    display:flex;
-    justify-content:space-between;
-    margin-top:7px;
-    color:#62586c;
-    font-size:7px;
+.result h2 {
+    margin-bottom: 12px;
 }
 
-.security-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:12px;
-    margin-top:25px;
+.safe {
+    color: #00ff9d;
 }
 
-.security-box{
-    padding:17px;
-    border-radius:12px;
-    border:1px solid rgba(168,85,247,.14);
-    background:rgba(168,85,247,.025);
+.phishing {
+    color: #ff315f;
 }
 
-.security-icon{
-    font-size:19px;
-    margin-bottom:10px;
+.error {
+    color: #ff315f;
 }
 
-.security-box h3{
-    font-size:10px;
-    margin-bottom:6px;
+.info {
+    color: #9f92a9;
+    margin-top: 8px;
+    line-height: 1.6;
 }
 
-.security-box p{
-    color:#84798f;
-    font-family:monospace;
-    font-size:8px;
+.confidence {
+    margin-top: 15px;
+    font-size: 18px;
 }
 
-.report-area{
-    margin-top:25px;
-    text-align:right;
+.loading {
+    color: #c77dff;
 }
 
-#reportBtn{
-    padding:11px 15px;
-    border-radius:8px;
-    border:1px solid #a855f7;
-    color:white;
-    background:rgba(168,85,247,.07);
-    cursor:pointer;
-    font-family:monospace;
-    font-size:8px;
+.features {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto 80px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+    position: relative;
+    z-index: 1;
 }
 
-.history{
-    margin-top:25px;
+.card {
+    padding: 25px;
+    border: 1px solid #59246e;
+    border-radius: 18px;
+    background: #09030fbb;
 }
 
-.history h2{
-    font-size:12px;
-    margin-bottom:15px;
+.card-icon {
+    font-size: 25px;
+    margin-bottom: 15px;
 }
 
-.history-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px;
-    border-bottom:1px solid #17101d;
+.card h3 {
+    margin-bottom: 8px;
 }
 
-.history-url{
-    max-width:75%;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    color:#918697;
-    font-family:monospace;
-    font-size:9px;
+.card p {
+    color: #887d96;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.badge{
-    padding:5px 8px;
-    border-radius:5px;
-    font-size:7px;
-    font-weight:bold;
+.footer {
+    text-align: center;
+    padding: 30px;
+    color: #63596d;
+    font-size: 12px;
 }
-
-@media(max-width:750px){
 
-    .security-grid{
-        grid-template-columns:repeat(2,1fr);
+@media(max-width:700px) {
+    .input-area {
+        flex-direction: column;
     }
 
-}
-
-@media(max-width:550px){
-
-    .container{
-        padding:12px;
+    button {
+        width: 100%;
+        height: 60px;
     }
 
-    .header{
-        align-items:flex-start;
-        gap:10px;
+    .features {
+        grid-template-columns: 1fr;
     }
 
-    .input-row{
-        flex-direction:column;
+    .scanner {
+        padding: 20px;
     }
 
-    #scanBtn{
-        width:100%;
-        height:48px;
+    .navbar {
+        width: 92%;
     }
 
-    .security-grid{
-        grid-template-columns:1fr;
+    .status {
+        font-size: 10px;
     }
-
-    .user-name{
-        display:none;
-    }
-
 }
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     LOGIN / REGISTER
-     ===================================================== -->
-
-<div id="authScreen">
-
-    <div class="auth-box">
-
-        <div class="auth-logo">
-
-            <div class="shield">🛡</div>
-
-            <h1>PHISHGUARD AI</h1>
-
-            <p>SECURE ACCESS TERMINAL</p>
-
+<nav class="navbar">
+    <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <div>
+            <h2>PhishGuard AI</h2>
+            <span>CYBER THREAT INTELLIGENCE</span>
         </div>
+    </div>
 
+    <div class="status">
+        <div class="dot"></div>
+        ONLINE
+    </div>
+</nav>
 
-        <div class="tabs">
+<section class="hero">
 
-            <button
-                class="tab active"
-                onclick="showLogin()"
-                id="loginTab">
-                LOGIN
-            </button>
+    <div class="badge">AI POWERED SECURITY</div>
 
-            <button
-                class="tab"
-                onclick="showRegister()"
-                id="registerTab">
-                REGISTER
-            </button>
+    <h1>
+        Detect Phishing.<br>
+        Stay Secure.
+    </h1>
 
-        </div>
+    <p>
+        Analyze suspicious URLs using intelligent security signals.
+    </p>
 
+</section>
 
-        <!-- LOGIN -->
+<section class="scanner">
 
-        <form
-            class="auth-form active"
-            id="loginForm"
-            onsubmit="loginUser(event)">
+    <div class="scanner-title">
+        <h3>URL THREAT SCANNER</h3>
+        <div class="engine">ENGINE V2.0</div>
+    </div>
 
-            <div class="input-group">
+    <div class="input-area">
 
-                <label>USERNAME / EMAIL</label>
+        <input
+            id="urlInput"
+            type="text"
+            placeholder="Enter website URL e.g. https://google.com"
+        >
 
-                <input
-                    id="loginEmail"
-                    type="text"
-                    placeholder="Enter username"
-                    required>
-
-            </div>
-
-
-            <div class="input-group">
-
-                <label>PASSWORD</label>
-
-                <input
-                    id="loginPassword"
-                    type="password"
-                    placeholder="Enter password"
-                    required>
-
-            </div>
-
-
-            <button class="auth-btn">
-                ACCESS SECURITY CENTER
-            </button>
-
-        </form>
-
-
-        <!-- REGISTER -->
-
-        <form
-            class="auth-form"
-            id="registerForm"
-            onsubmit="registerUser(event)">
-
-            <div class="input-group">
-
-                <label>USERNAME</label>
-
-                <input
-                    id="registerName"
-                    type="text"
-                    placeholder="Create username"
-                    required>
-
-            </div>
-
-
-            <div class="input-group">
-
-                <label>EMAIL</label>
-
-                <input
-                    id="registerEmail"
-                    type="email"
-                    placeholder="you@example.com"
-                    required>
-
-            </div>
-
-
-            <div class="input-group">
-
-                <label>PASSWORD</label>
-
-                <input
-                    id="registerPassword"
-                    type="password"
-                    placeholder="Minimum 6 characters"
-                    minlength="6"
-                    required>
-
-            </div>
-
-
-            <button class="auth-btn">
-                CREATE SECURE ACCOUNT
-            </button>
-
-        </form>
-
-
-        <div
-            id="authMessage"
-            class="auth-message">
-        </div>
-
-
-        <div class="security-note">
-            🔐 LOCAL DEMO AUTHENTICATION
-            <br><br>
-            Account data is stored locally in this browser.
-        </div>
+        <button id="scanButton" onclick="scanURL()">
+            SCAN URL
+        </button>
 
     </div>
 
-</div>
+    <div id="result" class="result"></div>
 
+</section>
 
-<!-- =====================================================
-     MAIN APP
-     ===================================================== -->
+<section class="features">
 
-<div id="app">
-
-<div class="container">
-
-
-    <header class="header">
-
-        <div class="logo">
-
-            <div class="logo-icon">🛡</div>
-
-            <div>
-
-                <h2>PHISHGUARD AI</h2>
-
-                <span>
-                    CYBER THREAT INTELLIGENCE
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <div class="user-area">
-
-            <span
-                class="user-name"
-                id="currentUser">
-            </span>
-
-            <div class="live">
-
-                <span class="live-dot"></span>
-
-                ONLINE
-
-            </div>
-
-            <button
-                class="logout"
-                onclick="logoutUser()">
-                LOGOUT
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <section class="hero">
-
-        <div class="tag">
-            AI POWERED SECURITY
-        </div>
-
-        <h1>
-            Detect Phishing.<br>
-            Stay Secure.
-        </h1>
-
+    <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3>AI Analysis</h3>
         <p>
-            Analyze suspicious URLs using
-            intelligent security signals.
+            Intelligent URL analysis using multiple security signals
+            to identify suspicious websites.
         </p>
-
-    </section>
-
-
-    <!-- SCANNER -->
-
-    <section class="scan-card">
-
-        <div class="scan-header">
-
-            <h3>URL THREAT SCANNER</h3>
-
-            <span class="engine">
-                ENGINE v2.0
-            </span>
-
-        </div>
-
-
-        <div class="input-row">
-
-            <input
-                id="url"
-                type="text"
-                placeholder="https://example.com">
-
-            <button
-                id="scanBtn"
-                onclick="scanURL()">
-
-                SCAN URL
-
-            </button>
-
-        </div>
-
-
-        <div id="scanning">
-
-            <div id="scanText">
-                INITIALIZING SECURITY SCAN...
-            </div>
-
-            <div class="scan-line"></div>
-
-        </div>
-
-
-        <div id="result"></div>
-
-    </section>
-
-
-    <!-- ADVANCED -->
-
-    <section class="advanced-panel">
-
-        <div class="advanced-header">
-
-            <div>
-
-                <span class="advanced-tag">
-                    ADVANCED SECURITY
-                </span>
-
-                <h2>
-                    THREAT INTELLIGENCE CENTER
-                </h2>
-
-            </div>
-
-            <div class="live">
-
-                <span class="live-dot"></span>
-
-                LIVE
-
-            </div>
-
-        </div>
-
-
-        <div class="meter-header">
-
-            <span>
-                REAL-TIME THREAT LEVEL
-            </span>
-
-            <strong id="threatPercent">
-                0%
-            </strong>
-
-        </div>
-
-
-        <div class="meter-track">
-
-            <div id="meterBar"></div>
-
-        </div>
-
-
-        <div class="meter-labels">
-
-            <span>SAFE</span>
-            <span>WARNING</span>
-            <span>CRITICAL</span>
-
-        </div>
-
-
-        <div class="security-grid">
-
-
-            <div class="security-box">
-
-                <div class="security-icon">🔐</div>
-
-                <h3>URL REPUTATION</h3>
-
-                <p id="reputationStatus">
-                    Waiting...
-                </p>
-
-            </div>
-
-
-            <div class="security-box">
-
-                <div class="security-icon">🌐</div>
-
-                <h3>DOMAIN ANALYSIS</h3>
-
-                <p id="domainStatus">
-                    Waiting...
-                </p>
-
-            </div>
-
-
-            <div class="security-box">
-
-                <div class="security-icon">🤖</div>
-
-                <h3>AI PREDICTION</h3>
-
-                <p id="aiStatus">
-                    Waiting...
-                </p>
-
-            </div>
-
-
-            <div class="security-box">
-
-                <div class="security-icon">🛡</div>
-
-                <h3>SECURITY STATUS</h3>
-
-                <p id="securityStatus">
-                    SYSTEM READY
-                </p>
-
-            </div>
-
-
-        </div>
-
-
-        <div class="report-area">
-
-            <button
-                id="reportBtn"
-                onclick="generateReport()">
-
-                📄 GENERATE SECURITY REPORT
-
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- HISTORY -->
-
-    <section class="history">
-
-        <h2>📜 SCAN HISTORY</h2>
-
-        <div id="historyList">
-            No scans yet.
-        </div>
-
-    </section>
-
-
+    </div>
+
+    <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Real-Time Detection</h3>
+        <p>
+            Scan a URL instantly and receive the security result
+            from the Flask backend.
+        </p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🔐</div>
+        <h3>Stay Protected</h3>
+        <p>
+            Detect potentially dangerous phishing websites before
+            entering sensitive information.
+        </p>
+    </div>
+
+</section>
+
+<div class="footer">
+    © 2026 PhishGuard AI • AI Phishing Detection System
 </div>
-
-</div>
-
 
 <script>
 
-/* =====================================================
-   AUTHENTICATION
-   ===================================================== */
-
-function showLogin(){
-
-    document.getElementById(
-        "loginForm"
-    ).classList.add("active");
-
-    document.getElementById(
-        "registerForm"
-    ).classList.remove("active");
-
-    document.getElementById(
-        "loginTab"
-    ).classList.add("active");
-
-    document.getElementById(
-        "registerTab"
-    ).classList.remove("active");
-
-    clearMessage();
-}
-
-
-function showRegister(){
-
-    document.getElementById(
-        "registerForm"
-    ).classList.add("active");
-
-    document.getElementById(
-        "loginForm"
-    ).classList.remove("active");
-
-    document.getElementById(
-        "registerTab"
-    ).classList.add("active");
-
-    document.getElementById(
-        "loginTab"
-    ).classList.remove("active");
-
-    clearMessage();
-}
-
-
-function registerUser(event){
-
-    event.preventDefault();
-
-
-    const name =
-        document.getElementById(
-            "registerName"
-        ).value.trim();
-
-
-    const email =
-        document.getElementById(
-            "registerEmail"
-        ).value.trim();
-
-
-    const password =
-        document.getElementById(
-            "registerPassword"
-        ).value;
-
-
-    if(password.length < 6){
-
-        showMessage(
-            "Password must contain at least 6 characters.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const existing =
-        JSON.parse(
-            localStorage.getItem(
-                "phishguard_users"
-            ) || "[]"
-        );
-
-
-    const alreadyExists =
-        existing.find(
-            user =>
-                user.email.toLowerCase()
-                === email.toLowerCase()
-        );
-
-
-    if(alreadyExists){
-
-        showMessage(
-            "Account already exists.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    existing.push({
-
-        name:name,
-
-        email:email,
-
-        password:password
-
-    });
-
-
-    localStorage.setItem(
-        "phishguard_users",
-        JSON.stringify(existing)
-    );
-
-
-    showMessage(
-        "Account created successfully. Login now.",
-        "success"
-    );
-
-
-    document.getElementById(
-        "registerForm"
-    ).reset();
-
-
-    setTimeout(
-        showLogin,
-        1000
-    );
-
-}
-
-
-function loginUser(event){
-
-    event.preventDefault();
-
-
-    const email =
-        document.getElementById(
-            "loginEmail"
-        ).value.trim();
-
-
-    const password =
-        document.getElementById(
-            "loginPassword"
-        ).value;
-
-
-    const users =
-        JSON.parse(
-            localStorage.getItem(
-                "phishguard_users"
-            ) || "[]"
-        );
-
-
-    const user =
-        users.find(
-            item =>
-                item.email.toLowerCase()
-                === email.toLowerCase()
-                &&
-                item.password === password
-        );
-
-
-    if(!user){
-
-        showMessage(
-            "Invalid username or password.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    localStorage.setItem(
-        "phishguard_current_user",
-        JSON.stringify(user)
-    );
-
-
-    openApp(user);
-
-}
-
-
-function logoutUser(){
-
-    localStorage.removeItem(
-        "phishguard_current_user"
-    );
-
-
-    document.getElementById(
-        "app"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "authScreen"
-    ).style.display =
-        "flex";
-
-
-    document.getElementById(
-        "loginForm"
-    ).reset();
-
-}
-
-
-function openApp(user){
-
-    document.getElementById(
-        "authScreen"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "app"
-    ).style.display =
-        "block";
-
-
-    document.getElementById(
-        "currentUser"
-    ).innerText =
-        "👤 " + user.name;
-
-
-    renderHistory();
-
-}
-
-
-function showMessage(
-    message,
-    type
-){
-
-    const box =
-        document.getElementById(
-            "authMessage"
-        );
-
-
-    box.innerText =
-        message;
-
-
-    box.style.color =
-        type === "success"
-        ? "#00ff88"
-        : "#ff1744";
-
-}
-
-
-function clearMessage(){
-
-    document.getElementById(
-        "authMessage"
-    ).innerText = "";
-
-}
-
-
-/* =====================================================
-   AUTO LOGIN
-   ===================================================== */
-
-const currentUser =
-    JSON.parse(
-        localStorage.getItem(
-            "phishguard_current_user"
-        )
-    );
-
-
-if(currentUser){
-
-    openApp(currentUser);
-
-}
-
-
-/* =====================================================
-   BACKEND
-   ===================================================== */
-
-const API_URL =
-    "http://127.0.0.1:5000/scan";
-
-
-/* =====================================================
-   SCAN
-   ===================================================== */
-
-async function scanURL(){
-
-    const input =
-        document.getElementById(
-            "url"
-        );
-
-
-    let url =
-        input.value.trim();
-
-
-    if(!url){
-
-        alert(
-            "Enter a website URL."
-        );
-
-        return;
-
-    }
-
-
-    if(
-        !url.startsWith("http://")
-        &&
-        !url.startsWith("https://")
-    ){
-
-        url =
-            "https://" + url;
-
-    }
-
-
-    startScanning();
-
-
-    try{
-
-        const response =
-            await fetch(
-                API_URL,
-                {
-
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:JSON.stringify({
-                        url:url
-                    })
-
-                }
-            );
-
-
-        if(!response.ok){
-
-            throw new Error(
-                "Backend error: "
-                + response.status
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        stopScanning();
-
-
-        displayResult(
-            data,
-            url
-        );
-
-
-        updateAdvanced(
-            data,
-            url
-        );
-
-
-        saveScan(
-            data,
-            url
-        );
-
-    }
-
-
-    catch(error){
-
-        stopScanning();
-
-
-        document.getElementById(
-            "result"
-        ).innerHTML = `
-
-        <div class="result-card">
-
-            <div class="result-status risky">
-                BACKEND ERROR
-            </div>
-
-            <div class="result-url">
-                ${escapeHTML(
-                    error.message
-                )}
-
-                <br><br>
-
-                Make sure Flask backend
-                is running on port 5000.
-            </div>
-
-        </div>
-
+const BACKEND_URL =
+    "https://ai-phishing-detector-isao.onrender.com";
+
+async function scanURL() {
+
+    const input = document.getElementById("urlInput");
+    const button = document.getElementById("scanButton");
+    const result = document.getElementById("result");
+
+    let url = input.value.trim();
+
+    if (!url) {
+        result.className = "result show";
+        result.innerHTML = `
+            <h2 class="error">⚠️ ENTER A URL</h2>
+            <p class="info">
+                Please enter a website URL before scanning.
+            </p>
         `;
-
+        return;
     }
 
-}
+    button.disabled = true;
+    button.innerText = "SCANNING...";
 
-
-/* =====================================================
-   SCANNING
-   ===================================================== */
-
-function startScanning(){
-
-    document.getElementById(
-        "scanning"
-    ).classList.add("active");
-
-
-    const messages = [
-
-        "INITIALIZING SECURITY SCAN...",
-
-        "ANALYZING URL STRUCTURE...",
-
-        "CHECKING DOMAIN SIGNALS...",
-
-        "RUNNING AI THREAT MODEL...",
-
-        "CALCULATING RISK SCORE..."
-
-    ];
-
-
-    let i = 0;
-
-
-    window.scanTimer =
-        setInterval(()=>{
-
-            document.getElementById(
-                "scanText"
-            ).innerText =
-                messages[i];
-
-
-            i =
-                (i + 1)
-                % messages.length;
-
-        },600);
-
-}
-
-
-function stopScanning(){
-
-    clearInterval(
-        window.scanTimer
-    );
-
-
-    document.getElementById(
-        "scanning"
-    ).classList.remove(
-        "active"
-    );
-
-}
-
-
-/* =====================================================
-   RESULT
-   ===================================================== */
-
-function displayResult(
-    data,
-    url
-){
-
-    const status =
-        String(
-            data.status ??
-            data.result ??
-            data.prediction ??
-            data.risk ??
-            "SAFE"
-        );
-
-
-    const lower =
-        status.toLowerCase();
-
-
-    let cls =
-        "safe";
-
-
-    if(
-        lower.includes("phish")
-        ||
-        lower.includes("risk")
-        ||
-        lower.includes("malicious")
-    ){
-
-        cls =
-            "risky";
-
-    }
-
-    else if(
-        lower.includes("suspicious")
-        ||
-        lower.includes("warning")
-    ){
-
-        cls =
-            "suspicious";
-
-    }
-
-
-    const score =
-        data.score ??
-        data.risk_score ??
-        0;
-
-
-    document.getElementById(
-        "result"
-    ).innerHTML = `
-
-    <div class="result-card">
-
-        <div class="
-            result-status
-            ${cls}
-        ">
-
-            ${escapeHTML(
-                status.toUpperCase()
-            )}
-
-        </div>
-
-        <div class="result-url">
-
-            ${escapeHTML(url)}
-
-            <br><br>
-
-            Risk Score:
-            ${escapeHTML(
-                String(score)
-            )}
-
-        </div>
-
-    </div>
-
+    result.className = "result show";
+    result.innerHTML = `
+        <h2 class="loading">🔍 ANALYZING URL...</h2>
+        <p class="info">
+            Connecting to AI Phishing Detection Engine...
+        </p>
     `;
 
+    try {
 
-    updateMeter(
-        score,
-        status
-    );
+        const response = await fetch(
+            BACKEND_URL + "/scan",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    url: url
+                })
+            }
+        );
 
-}
-
-
-/* =====================================================
-   ADVANCED
-   ===================================================== */
-
-function updateAdvanced(
-    data,
-    url
-){
-
-    const status =
-        String(
-            data.status ??
-            data.result ??
-            data.prediction ??
-            data.risk ??
-            "SAFE"
-        ).toUpperCase();
-
-
-    document.getElementById(
-        "reputationStatus"
-    ).innerText =
-        (
-            status.includes("PHISH")
-            ||
-            status.includes("RISK")
-            ||
-            status.includes("MALICIOUS")
-        )
-        ? "THREAT DETECTED"
-        : "CLEAN";
-
-
-    let hostname = "";
-
-    try{
-
-        hostname =
-            new URL(url).hostname;
-
-    }
-    catch{
-
-        hostname =
-            "";
-
-    }
-
-
-    const dots =
-        (
-            hostname.match(/\./g)
-            || []
-        ).length;
-
-
-    document.getElementById(
-        "domainStatus"
-    ).innerText =
-        (
-            dots >= 4
-            ||
-            hostname.length > 45
-        )
-        ? "ANOMALOUS"
-        : "NORMAL";
-
-
-    document.getElementById(
-        "aiStatus"
-    ).innerText =
-        "ANALYSIS COMPLETE";
-
-
-    updateMeter(
-        data.score ??
-        data.risk_score ??
-        0,
-        status
-    );
-
-}
-
-
-/* =====================================================
-   METER
-   ===================================================== */
-
-function updateMeter(
-    score,
-    status
-){
-
-    const value =
-        Number(score) || 0;
-
-
-    let percent;
-
-
-    if(
-        String(status)
-            .toUpperCase()
-            .includes("RISK")
-        ||
-        String(status)
-            .toUpperCase()
-            .includes("PHISH")
-        ||
-        String(status)
-            .toUpperCase()
-            .includes("MALICIOUS")
-    ){
-
-        percent =
-            Math.max(
-                70,
-                value * 10
+        if (!response.ok) {
+            throw new Error(
+                "Backend returned HTTP " + response.status
             );
+        }
 
-    }
+        const data = await response.json();
 
-    else if(
-        String(status)
-            .toUpperCase()
-            .includes("SUSPIC")
-    ){
+        console.log("Scan Response:", data);
 
-        percent =
-            Math.max(
-                35,
-                value * 8
-            );
+        const status =
+            String(
+                data.status ||
+                data.result ||
+                data.prediction ||
+                ""
+            ).toLowerCase();
 
-    }
+        let isSafe =
+            status.includes("safe") ||
+            status.includes("legitimate");
 
-    else{
+        let confidence =
+            data.confidence ??
+            data.score ??
+            data.probability ??
+            0;
 
-        percent =
-            value * 5;
+        if (typeof confidence === "number" &&
+            confidence <= 1) {
+            confidence = confidence * 100;
+        }
 
-    }
-
-
-    percent =
-        Math.min(
-            100,
+        confidence =
             Math.max(
                 0,
-                percent
-            )
-        );
-
-
-    document.getElementById(
-        "threatPercent"
-    ).innerText =
-        Math.round(percent)
-        + "%";
-
-
-    document.getElementById(
-        "meterBar"
-    ).style.width =
-        percent + "%";
-
-
-    const security =
-        document.getElementById(
-            "securityStatus"
-        );
-
-
-    if(percent >= 70){
-
-        security.innerText =
-            "CRITICAL THREAT";
-
-        security.style.color =
-            "#ff1744";
-
-    }
-
-    else if(percent >= 35){
-
-        security.innerText =
-            "SUSPICIOUS";
-
-        security.style.color =
-            "#ffc400";
-
-    }
-
-    else{
-
-        security.innerText =
-            "SECURE";
-
-        security.style.color =
-            "#00ff88";
-
-    }
-
-}
-
-
-/* =====================================================
-   HISTORY
-   ===================================================== */
-
-function saveScan(
-    data,
-    url
-){
-
-    const status =
-        String(
-            data.status ??
-            data.result ??
-            data.prediction ??
-            data.risk ??
-            "SAFE"
-        );
-
-
-    const item = {
-
-        url:url,
-
-        status:
-            status.toUpperCase(),
-
-        score:
-            data.score ??
-            data.risk_score ??
-            0,
-
-        time:
-            new Date()
-                .toLocaleString()
-
-    };
-
-
-    let history =
-        JSON.parse(
-            localStorage.getItem(
-                "phishguard_history"
-            ) || "[]"
-        );
-
-
-    history.unshift(item);
-
-
-    history =
-        history.slice(0,20);
-
-
-    localStorage.setItem(
-        "phishguard_history",
-        JSON.stringify(history)
-    );
-
-
-    renderHistory();
-
-}
-
-
-function renderHistory(){
-
-    const list =
-        document.getElementById(
-            "historyList"
-        );
-
-
-    if(!list) return;
-
-
-    const history =
-        JSON.parse(
-            localStorage.getItem(
-                "phishguard_history"
-            ) || "[]"
-        );
-
-
-    if(!history.length){
-
-        list.innerHTML =
-            "No scans yet.";
-
-        return;
-
-    }
-
-
-    list.innerHTML =
-        history.map(item=>{
-
-            const s =
-                item.status.toLowerCase();
-
-
-            let cls =
-                "safe";
-
-
-            if(
-                s.includes("risk")
-                ||
-                s.includes("phish")
-                ||
-                s.includes("malicious")
-            ){
-
-                cls =
-                    "risky";
-
-            }
-
-            else if(
-                s.includes("suspicious")
-                ||
-                s.includes("warning")
-            ){
-
-                cls =
-                    "suspicious";
-
-            }
-
-
-            return `
-
-            <div class="history-item">
-
-                <div>
-
-                    <div class="history-url">
-                        ${escapeHTML(item.url)}
-                    </div>
-
-                    <small style="
-                        color:#514858;
-                        font-size:7px;
-                    ">
-                        ${item.time}
-                    </small>
-
+                Math.min(100, Number(confidence) || 0)
+            ).toFixed(1);
+
+        if (isSafe) {
+
+            result.innerHTML = `
+                <h2 class="safe">
+                    ✅ SAFE WEBSITE
+                </h2>
+
+                <p class="info">
+                    The URL appears to be safe based on
+                    the security analysis.
+                </p>
+
+                <div class="confidence">
+                    Confidence: <strong>${confidence}%</strong>
                 </div>
-
-                <span
-                    class="badge ${cls}"
-                    style="
-                    background:rgba(168,85,247,.06);
-                    "
-                >
-                    ${escapeHTML(item.status)}
-                </span>
-
-            </div>
-
             `;
 
-        }).join("");
+        } else {
 
+            result.innerHTML = `
+                <h2 class="phishing">
+                    ❌ PHISHING WEBSITE
+                </h2>
+
+                <p class="info">
+                    This URL contains suspicious security
+                    signals and may be dangerous.
+                </p>
+
+                <div class="confidence">
+                    Confidence: <strong>${confidence}%</strong>
+                </div>
+            `;
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        result.innerHTML = `
+            <h2 class="error">
+                ❌ BACKEND CONNECTION ERROR
+            </h2>
+
+            <p class="info">
+                Unable to connect to the phishing detection
+                server.
+            </p>
+
+            <p class="info">
+                Backend:
+                ${BACKEND_URL}
+            </p>
+
+            <p class="info">
+                Error: ${error.message}
+            </p>
+        `;
+
+    } finally {
+
+        button.disabled = false;
+        button.innerText = "SCAN URL";
+    }
 }
-
-
-/* =====================================================
-   REPORT
-   ===================================================== */
-
-function generateReport(){
-
-    const url =
-        document.getElementById(
-            "url"
-        ).value || "N/A";
-
-
-    const report = `
-
-PHISHGUARD AI
-========================================
-CYBER SECURITY REPORT
-========================================
-
-USER:
-${currentUser?.name || "User"}
-
-DATE:
-${new Date().toLocaleString()}
-
-TARGET:
-${url}
-
-THREAT LEVEL:
-${document.getElementById("threatPercent").innerText}
-
-SECURITY STATUS:
-${document.getElementById("securityStatus").innerText}
-
-URL REPUTATION:
-${document.getElementById("reputationStatus").innerText}
-
-DOMAIN ANALYSIS:
-${document.getElementById("domainStatus").innerText}
-
-AI PREDICTION:
-${document.getElementById("aiStatus").innerText}
-
-========================================
-Generated by PhishGuard AI
-========================================
-`;
-
-
-    const blob =
-        new Blob(
-            [report],
-            {
-                type:
-                    "text/plain"
-            }
-        );
-
-
-    const link =
-        document.createElement("a");
-
-
-    link.href =
-        URL.createObjectURL(blob);
-
-
-    link.download =
-        "PhishGuard-Security-Report.txt";
-
-
-    link.click();
-
-}
-
-
-/* =====================================================
-   ESCAPE
-   ===================================================== */
-
-function escapeHTML(value){
-
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* ENTER KEY */
 
 document
-    .getElementById("url")
-    .addEventListener(
-        "keydown",
-        function(e){
+    .getElementById("urlInput")
+    .addEventListener("keydown", function(event) {
 
-            if(e.key === "Enter"){
-                scanURL();
-            }
-
+        if (event.key === "Enter") {
+            scanURL();
         }
-    );
+
+    });
 
 </script>
 
